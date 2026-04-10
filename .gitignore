@@ -45,3 +45,4 @@ uv.lock
 /app/ml_model
 /app/api/app.py
 /app/api/prediction_api.py
+/app/api/llm_api.py
