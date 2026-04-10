@@ -12,21 +12,17 @@ CREATE TABLE predictions (
     llm_narrative TEXT,
     chart_data JSONB,
     inference_latency_ms NUMERIC(6, 2),
+    llm_inference_latency_ms NUMERIC(10, 2),
+    total_inference_latency_ms NUMERIC(10, 2),
     created_at TIMESTAMPTZ DEFAULT NOW()
 );
 
--- 2. MODEL PERFORMANCE & TRANSPARENCY TABLE
-CREATE TABLE model_performance (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    model_version VARCHAR(50) NOT NULL,
-    algorithm VARCHAR(50) DEFAULT 'RandomForestRegressor',
-    r2_score NUMERIC(4,3),
-    mae NUMERIC(8,2),
-    rmse NUMERIC(8,2),
-    feature_importance JSONB, -- e.g., {"experience_level": 0.35, "company_region": 0.22, ...}
-    hyperparameters JSONB,
-    training_date TIMESTAMPTZ DEFAULT NOW()
-);
+-- If the table already exists in Supabase, run this migration safely.
+ALTER TABLE predictions
+ADD COLUMN IF NOT EXISTS llm_inference_latency_ms NUMERIC(10, 2);
+
+ALTER TABLE predictions
+ADD COLUMN IF NOT EXISTS total_inference_latency_ms NUMERIC(10, 2);
 
 -- PERFORMANCE INDEXES
 CREATE INDEX idx_predictions_created_at ON predictions(created_at DESC);
@@ -37,5 +33,10 @@ CREATE INDEX idx_predictions_location ON predictions(company_location);
 ALTER TABLE predictions ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Public read access" ON predictions FOR SELECT USING (true);
 
-ALTER TABLE model_performance ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "Public read access" ON model_performance FOR SELECT USING (true);
+
+
+
+
+
+
+

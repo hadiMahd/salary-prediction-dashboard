@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from typing import List, Optional, Dict, Any
+from typing import Literal
 
 # 🔹 Input: Matches 'predictions' table columns
 class PredictionInput(BaseModel):
@@ -8,7 +9,7 @@ class PredictionInput(BaseModel):
     employment_type: str = Field(..., pattern="^(FT|PT|CT|FL)$")
     job_title: str
     company_size: str = Field(..., pattern="^(S|M|L)$")
-    remote_ratio: int = Field(..., pattern="^(0|50|100)$")
+    remote_ratio: Literal[0, 50, 100]
     company_location: str  # ⚠️ Keep short (VARCHAR(10) in DB)
 
 # 🔹 LLM Output: Matches Supabase 'chart_data' JSONB structure
@@ -31,4 +32,6 @@ class PredictionRecord(BaseModel):
     predicted_salary: float
     llm_narrative: str
     chart_data: Dict[str, Any]
-    inference_latency_ms: Optional[float] = None
+    ml_inference_ms: Optional[float] = None
+    llm_inference_latency_ms: Optional[float] = None
+    total_inference_latency_ms: Optional[float] = None
