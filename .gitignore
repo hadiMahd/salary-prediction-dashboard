@@ -43,3 +43,5 @@ uv.lock
 
 #ml model files
 /app/ml_model
+/app/api/app.py
+/app/api/prediction_api.py
