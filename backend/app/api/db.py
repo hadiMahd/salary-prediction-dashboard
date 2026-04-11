@@ -1,8 +1,8 @@
 from supabase import create_client
 import os
 from dotenv import load_dotenv
-from fastapi import APIRouter
-from ...utils import limiter  # Import the shared limiter instance
+from fastapi import APIRouter, Request
+from utils import limiter  # Import the shared limiter instance
 
 load_dotenv()
 
@@ -18,7 +18,7 @@ def get_supabase_client():
 
 @router.get("/test-connection")
 @limiter.limit("10/minute")  # Apply rate limiting to this endpoint
-async def test_db_connection_endpoint():
+async def test_db_connection_endpoint(request: Request):
     """Swagger-friendly endpoint to validate Supabase connectivity."""
     try:
         supabase = get_supabase_client()
