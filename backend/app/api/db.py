@@ -2,10 +2,12 @@ from supabase import create_client
 import os
 from dotenv import load_dotenv
 from fastapi import APIRouter
+from ...utils import limiter  # Import the shared limiter instance
 
 load_dotenv()
 
 router = APIRouter(prefix="/db", tags=["api"])
+
 
 def get_supabase_client():
     supabase_url = os.getenv("SUPABASE_URL")
@@ -14,23 +16,19 @@ def get_supabase_client():
         raise RuntimeError("SUPABASE_URL or SUPABASE_KEY is not set.")
     return create_client(supabase_url, supabase_key)
 
-def test_db_connection():
-    """Tests connection to Supabase by fetching a sample record."""
+@router.get("/test-connection")
+@limiter.limit("10/minute")  # Apply rate limiting to this endpoint
+async def test_db_connection_endpoint():
+    """Swagger-friendly endpoint to validate Supabase connectivity."""
     try:
         supabase = get_supabase_client()
         response = supabase.table("predictions").select("*").limit(1).execute()
         if response.data:
             return {"status": "success", "data": response.data[0]}
-        else:
-            return {"status": "success", "data": None, "message": "No records found."}
+        return {"status": "success", "data": None, "message": "No records found."}
     except Exception as e:
         return {"status": "error", "message": str(e)}
 
-
-@router.get("/test-connection")
-async def test_db_connection_endpoint():
-    """Swagger-friendly endpoint to validate Supabase connectivity."""
-    return test_db_connection()
 
 def save_prediction_to_db(record: dict) -> dict:
     """Inserts data into the 'predictions' table."""

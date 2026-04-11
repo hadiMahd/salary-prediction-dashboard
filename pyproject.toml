@@ -13,4 +13,5 @@ dependencies = [
     "scikit-learn>=1.8.0",
     "google-genai>=1.71.0",
     "ollama>=0.6.1",
+    "slowapi>=0.1.9",
 ]

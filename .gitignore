@@ -23,8 +23,8 @@ ENV/
 *.swo
 
 # Streamlit
-.streamlit/secrets.toml
-.streamlit/.secrets/
+frontend/.streamlit/secrets.toml
+frontend/.streamlit/.secrets/
 
 # Environment variables
 .env
@@ -41,8 +41,8 @@ Thumbs.db
 # uv cache
 uv.lock
 
-#ml model files
-/app/ml_model
-/app/api/app.py
-/app/api/prediction_api.py
-/app/api/llm_api.py
+# ml model and legacy files (backend layout)
+/backend/app/ml_model
+/backend/app/api/app.py
+/backend/app/api/prediction_api.py
+/backend/app/api/llm_api.py

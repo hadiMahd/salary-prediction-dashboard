@@ -4,7 +4,10 @@
 echo "🎯 Starting Salary Prediction Dashboard..."
 echo ""
 
-cd "$(dirname "$0")" || exit
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+
+cd "$PROJECT_ROOT" || exit
 
 # Check if uv is available
 if ! command -v uv &> /dev/null; then
@@ -24,4 +27,4 @@ echo ""
 echo "Press Ctrl+C to stop the server"
 echo ""
 
-uv run -m streamlit run streamlit_app.py
+uv run -m streamlit run frontend/streamlit_app.py

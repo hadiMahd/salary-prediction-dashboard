@@ -9,6 +9,7 @@ from ollama import Client  # type: ignore[import-not-found]
 from app.api.db import save_prediction_to_db
 from app.api.models import PredictionInput, PredictionRecord, SalaryAnalysis
 from app.api.pred_llm_service import get_ml_prediction
+from ...utils import limiter  # Import the shared limiter instance
 
 
 load_dotenv()
@@ -130,6 +131,7 @@ def process_ollama_prediction_pipeline(data: PredictionInput) -> dict:
 
 
 @router.post("/predict-insights")
+@limiter.limit("10/minute")  # Apply rate limiting to this endpoint
 async def predict_with_ollama_insights_endpoint(input_data: PredictionInput):
 	"""Runs ML + Ollama insights and saves the full record in DB."""
 	try:

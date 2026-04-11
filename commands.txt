@@ -1,8 +1,11 @@
 commands:
 
 -run api ui: 
-"uv sync 
- uv run -m uvicorn main:app --reload --port 8000"
+"uv sync
+ cd backend && uv run -m uvicorn main:app --reload --port 8000"
 
 -run streamlit:
-"./start_app.sh"
+"./frontend/start_app.sh"
+
+-activate venv:
+"source .venv/bin/activate"
